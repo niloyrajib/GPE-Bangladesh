@@ -16,7 +16,8 @@ import {
   Share2,
   Sliders,
   CheckSquare,
-  Square
+  Square,
+  ExternalLink
 } from 'lucide-react';
 import { Product } from '../../../types';
 import { CollectionItem } from './ShopifyCollectionsView';
@@ -24,22 +25,51 @@ import { CollectionItem } from './ShopifyCollectionsView';
 interface ShopifyAddCollectionViewProps {
   products: Product[];
   onBack: () => void;
-  onSave: (collection: CollectionItem) => void;
+  onSave: (collection: CollectionItem, isEdit?: boolean) => void;
+  onDelete?: (collectionId: string) => void;
+  editCollection?: CollectionItem | null;
   showToast?: (message: string) => void;
+  onViewOnStorefront?: (collectionTitle: string) => void;
 }
 
 export const ShopifyAddCollectionView: React.FC<ShopifyAddCollectionViewProps> = ({
   products,
   onBack,
   onSave,
-  showToast = (_msg: string) => {}
+  onDelete,
+  editCollection,
+  showToast = (_msg: string) => {},
+  onViewOnStorefront
 }) => {
+  const isEditing = Boolean(editCollection);
+
   // Collection Form State
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [title, setTitle] = useState(editCollection?.title || '');
+  const [description, setDescription] = useState(editCollection?.description || '');
+  const [imageUrl, setImageUrl] = useState(editCollection?.image || '');
+  const [badgeLogoText, setBadgeLogoText] = useState(
+    editCollection?.badgeLogoText || (editCollection ? editCollection.title.toUpperCase() : '')
+  );
   const [themeTemplate, setThemeTemplate] = useState('Default collection');
-  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>(() => {
+    if (editCollection) {
+      // Products with matching collection name or matching category
+      const matched = products.filter(
+        (p) =>
+          p.collections?.includes(editCollection.title) ||
+          p.category.toLowerCase() === editCollection.title.toLowerCase() ||
+          p.category.toLowerCase().includes(editCollection.title.toLowerCase())
+      );
+      if (matched.length > 0) {
+        return matched.map((p) => p.id);
+      }
+      // If productsCount exists, take initial matching slice
+      if (editCollection.productsCount && editCollection.productsCount > 0) {
+        return products.slice(0, Math.min(editCollection.productsCount, products.length)).map((p) => p.id);
+      }
+    }
+    return [];
+  });
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [statusFilterActive, setStatusFilterActive] = useState(true);
 
@@ -61,7 +91,14 @@ export const ShopifyAddCollectionView: React.FC<ShopifyAddCollectionViewProps> =
   const [isConditionModalOpen, setIsConditionModalOpen] = useState(false);
   const [conditionField, setConditionField] = useState('Product category');
   const [conditionOperator, setConditionOperator] = useState('is equal to');
-  const [conditionValue, setConditionValue] = useState('');
+  const [conditionValue, setConditionValue] = useState(() => {
+    if (editCollection?.conditions) {
+      const parts = editCollection.conditions.split('is equal to');
+      if (parts.length > 1) return parts[1].trim();
+      return editCollection.conditions;
+    }
+    return '';
+  });
 
   // Image upload reference
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -145,20 +182,25 @@ export const ShopifyAddCollectionView: React.FC<ShopifyAddCollectionViewProps> =
       return;
     }
 
-    const newCollection: CollectionItem = {
-      id: `col-${Date.now()}`,
+    const updatedCollection: CollectionItem = {
+      id: editCollection?.id || `col-${Date.now()}`,
       title: trimmedTitle,
+      description: description,
       productsCount: selectedProductIds.length,
-      conditions: conditionValue ? `${conditionField} ${conditionOperator} ${conditionValue}` : '',
+      conditions: conditionValue ? `${conditionField} ${conditionOperator} ${conditionValue}` : (editCollection?.conditions || ''),
       image:
         imageUrl ||
         (collectionProducts[0]?.images?.[0] ||
           'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&auto=format&fit=crop&q=80'),
-      badgeLogoText: trimmedTitle.toUpperCase()
+      badgeLogoText: badgeLogoText || trimmedTitle.toUpperCase()
     };
 
-    onSave(newCollection);
-    showToast(`"${trimmedTitle}" কালেকশন সফলভাবে তৈরি হয়েছে!`);
+    onSave(updatedCollection, isEditing);
+    showToast(
+      isEditing
+        ? `"${trimmedTitle}" কালেকশন সফলভাবে আপডেট করা হয়েছে!`
+        : `"${trimmedTitle}" কালেকশন সফলভাবে তৈরি হয়েছে!`
+    );
   };
 
   // Generated URL slug
@@ -171,35 +213,74 @@ export const ShopifyAddCollectionView: React.FC<ShopifyAddCollectionViewProps> =
   return (
     <div className="max-w-6xl mx-auto space-y-4 pb-12">
       {/* Top Bar with Breadcrumb and Actions */}
-      <div className="flex items-center justify-between pt-1">
-        {/* Breadcrumb matching PDF screenshot: [Tag icon] › Add collection */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+        {/* Breadcrumb matching Shopify admin: [Tag icon] › Collections › [Title] */}
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onBack}
-            className="p-1 rounded-md text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+            className="p-1 rounded-md text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors cursor-pointer"
             title="Back to collections"
           >
             <Tag className="w-4 h-4 text-gray-700" />
           </button>
           <span className="text-gray-400 text-sm font-light">›</span>
-          <h1 className="text-lg font-bold text-[#202223] tracking-tight">Add collection</h1>
-        </div>
-
-        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onBack}
-            className="px-3.5 py-1.5 border border-[#c9cccf] hover:bg-[#f6f6f7] text-[#202223] text-xs font-semibold rounded-lg transition-colors"
+            className="text-xs font-semibold text-gray-600 hover:text-black hover:underline cursor-pointer"
+          >
+            Collections
+          </button>
+          <span className="text-gray-400 text-sm font-light">›</span>
+          <h1 className="text-base sm:text-lg font-bold text-[#202223] tracking-tight">
+            {isEditing ? `Edit: ${editCollection?.title}` : 'Add collection'}
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isEditing && onViewOnStorefront && (
+            <button
+              type="button"
+              onClick={() => onViewOnStorefront(title || editCollection!.title)}
+              className="px-3 py-1.5 border border-emerald-300 hover:bg-emerald-50 text-emerald-800 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="হোমপেজে এই কালেকশনটি দেখুন"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>View in store</span>
+            </button>
+          )}
+
+          {isEditing && onDelete && (
+            <button
+              type="button"
+              onClick={() => {
+                if (confirm(`Are you sure you want to delete collection "${editCollection?.title}"?`)) {
+                  onDelete(editCollection!.id);
+                }
+              }}
+              className="px-3 py-1.5 border border-rose-200 hover:bg-rose-50 text-rose-600 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onBack}
+            className="px-3.5 py-1.5 border border-[#c9cccf] hover:bg-[#f6f6f7] text-[#202223] text-xs font-semibold rounded-lg transition-colors cursor-pointer"
           >
             Discard
           </button>
+
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-1.5 bg-[#303030] hover:bg-[#202020] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors"
+            className="px-4 py-1.5 bg-[#303030] hover:bg-[#202020] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
           >
-            Save
+            <Check className="w-3.5 h-3.5 text-emerald-400" />
+            <span>{isEditing ? 'Save changes' : 'Save'}</span>
           </button>
         </div>
       </div>

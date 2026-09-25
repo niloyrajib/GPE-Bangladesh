@@ -451,9 +451,21 @@ export default function App() {
           if (!matches) return false;
         }
 
-        // Category filter
-        if (selectedCategory !== 'all' && p.category !== selectedCategory) {
-          return false;
+        // Category & Collection filter
+        if (selectedCategory !== 'all') {
+          const catLower = selectedCategory.toLowerCase().trim();
+          const matchesCategory =
+            p.category.toLowerCase().trim() === catLower ||
+            p.category.toLowerCase().includes(catLower) ||
+            catLower.includes(p.category.toLowerCase().trim()) ||
+            (p.collections &&
+              p.collections.some(
+                (c) =>
+                  c.toLowerCase().trim() === catLower ||
+                  c.toLowerCase().includes(catLower) ||
+                  catLower.includes(c.toLowerCase().trim())
+              ));
+          if (!matchesCategory) return false;
         }
 
         // Tab filter
@@ -854,6 +866,10 @@ export default function App() {
         onAddCoupon={handleAddCoupon}
         onUpdateCoupon={handleUpdateCoupon}
         onDeleteCoupon={handleDeleteCoupon}
+        onSelectStorefrontCategory={(cat) => {
+          setSelectedCategory(cat);
+          scrollToCatalog();
+        }}
       />
 
       {/* Mobile Drawer */}

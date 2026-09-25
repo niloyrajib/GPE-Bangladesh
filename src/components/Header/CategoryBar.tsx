@@ -91,51 +91,29 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
 
           <button
             onClick={onScrollToFlashSale}
-            className="py-3 text-amber-600 hover:text-amber-700 font-bold transition-colors flex items-center gap-1.5 animate-pulse"
+            className="py-3 text-amber-600 hover:text-amber-700 font-bold transition-colors flex items-center gap-1.5 animate-pulse shrink-0"
           >
             <Flame className="w-4 h-4 fill-amber-500 text-amber-500" />
             <span>ফ্ল্যাশ সেল (Flash Deals)</span>
           </button>
 
-          <button
-            onClick={() => onSelectCategory('Smart Watches')}
-            className={`py-3 hover:text-emerald-600 transition-colors ${
-              selectedCategory === 'Smart Watches' ? 'text-emerald-600 font-bold border-b-2 border-emerald-600' : ''
-            }`}
-          >
-            স্মার্টওয়াচ
-          </button>
-
-          <button
-            onClick={() => onSelectCategory('Earbuds & Audio')}
-            className={`py-3 hover:text-emerald-600 transition-colors ${
-              selectedCategory === 'Earbuds & Audio' ? 'text-emerald-600 font-bold border-b-2 border-emerald-600' : ''
-            }`}
-          >
-            ইয়ারবাডস ও অডিও
-          </button>
-
-          <button
-            onClick={() => onSelectCategory("Men's Caps & Fashion")}
-            className={`py-3 hover:text-emerald-600 transition-colors ${
-              selectedCategory === "Men's Caps & Fashion" ? 'text-emerald-600 font-bold border-b-2 border-emerald-600' : ''
-            }`}
-          >
-            ক্যাপ কালেকশন
-          </button>
-
-          <button
-            onClick={() => onSelectCategory('Home & Kitchen')}
-            className={`py-3 hover:text-emerald-600 transition-colors ${
-              selectedCategory === 'Home & Kitchen' ? 'text-emerald-600 font-bold border-b-2 border-emerald-600' : ''
-            }`}
-          >
-            হোম এপ্লায়েন্স
-          </button>
+          {/* Dynamic Category/Collection Quick Links */}
+          {categories.slice(0, 6).map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => onSelectCategory(cat.name)}
+              className={`py-3 hover:text-emerald-600 transition-colors whitespace-nowrap shrink-0 ${
+                selectedCategory === cat.name ? 'text-emerald-600 font-bold border-b-2 border-emerald-600' : ''
+              }`}
+              title={cat.name}
+            >
+              {cat.banglaName || cat.name}
+            </button>
+          ))}
 
           <button
             onClick={onOpenTracking}
-            className="py-3 text-sky-600 hover:text-sky-700 font-medium transition-colors flex items-center gap-1"
+            className="py-3 text-sky-600 hover:text-sky-700 font-medium transition-colors flex items-center gap-1 shrink-0"
           >
             <Clock className="w-3.5 h-3.5" />
             <span>অর্ডার ট্র্যাকিং</span>

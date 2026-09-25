@@ -85,6 +85,7 @@ interface AdminPanelModalProps {
   onAddCoupon?: (newCoupon: Coupon) => void;
   onUpdateCoupon?: (updatedCoupon: Coupon) => void;
   onDeleteCoupon?: (code: string) => void;
+  onSelectStorefrontCategory?: (category: string) => void;
 }
 
 export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
@@ -104,7 +105,8 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   coupons,
   onAddCoupon,
   onUpdateCoupon,
-  onDeleteCoupon
+  onDeleteCoupon,
+  onSelectStorefrontCategory
 }) => {
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -873,7 +875,19 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
 
                     {/* SUB-VIEW: COLLECTIONS */}
                     {activeTab === 'collections' && (
-                      <ShopifyCollectionsView products={products} showToast={showToast} />
+                      <ShopifyCollectionsView
+                        products={products}
+                        themeConfig={themeConfig || DEFAULT_THEME_CONFIG}
+                        onSaveTheme={(updatedTheme) => {
+                          onSaveTheme?.(updatedTheme);
+                        }}
+                        onUpdateProduct={onUpdateProduct}
+                        onOpenStorefrontCategory={(categoryName) => {
+                          onClose();
+                          onSelectStorefrontCategory?.(categoryName);
+                        }}
+                        showToast={showToast}
+                      />
                     )}
 
                     {/* SUB-VIEW: INVENTORY */}

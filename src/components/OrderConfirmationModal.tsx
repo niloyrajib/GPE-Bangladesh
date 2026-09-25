@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircle,
   Copy,
@@ -34,6 +34,16 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
 
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handleCopyId = () => {
     navigator.clipboard.writeText(order.id);
     setCopied(true);
@@ -45,19 +55,39 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 print:p-0 print:bg-white print:static print:inset-auto">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 print:p-0 print:bg-white print:static print:inset-auto"
+      onClick={onClose}
+    >
       <div
-        className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 border border-gray-200 print:shadow-none print:border-none print:max-h-none print:max-w-none print:rounded-none"
+        className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 border border-gray-200 print:shadow-none print:border-none print:max-h-none print:max-w-none print:rounded-none flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button (Hidden on Print) */}
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors print:hidden z-10"
-          title="বন্ধ করুন"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Sticky Top Navigation with Prominent (X) Close Button (Always visible on scroll, hidden on print) */}
+        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-4 py-2.5 sm:px-6 sm:py-3 border-b border-gray-200 flex items-center justify-between shadow-xs print:hidden">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+            <span className="text-xs font-bold text-gray-800 truncate">
+              মানি রিসিট ও ক্যাশ মেমো
+            </span>
+            <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md hidden xs:inline-block">
+              {order.id}
+            </span>
+          </div>
+
+          {/* Explicit (X) Close Button */}
+          <button
+            onClick={onClose}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-800 border border-rose-200 hover:border-rose-300 font-bold text-xs transition-all shadow-xs cursor-pointer group shrink-0"
+            title="রিসিট বন্ধ করুন / Exit Receipt"
+            aria-label="Exit and Close Receipt"
+          >
+            <div className="w-4 h-4 rounded-full bg-white group-hover:bg-rose-200 flex items-center justify-center transition-colors">
+              <X className="w-3 h-3 text-rose-700" strokeWidth={2.5} />
+            </div>
+            <span>(X) Close / বন্ধ করুন</span>
+          </button>
+        </div>
 
         {/* ========================================================
             OFFICIAL MONEY RECEIPT & INVOICE HEADER (With GPE LOGO)
@@ -300,10 +330,10 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
           <div className="pt-3 flex flex-col sm:flex-row gap-2.5 print:hidden">
             <button
               onClick={handlePrint}
-              className="py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-emerald-700/20 cursor-pointer"
+              className="py-2.5 px-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-emerald-700/20 cursor-pointer flex-1"
             >
               <Printer className="w-4 h-4" />
-              <span>মানি রিসিট প্রিন্ট করুন (Print Receipt)</span>
+              <span>মানি রিসিট প্রিন্ট</span>
             </button>
 
             <button
@@ -311,18 +341,29 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
                 onClose();
                 onTrackOrder(order.id);
               }}
-              className="py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              className="py-2.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer flex-1"
             >
               <Truck className="w-4 h-4 text-emerald-400" />
-              <span>লাইভ অর্ডার ট্র্যাক করুন</span>
+              <span>লাইভ অর্ডার ট্র্যাক</span>
             </button>
 
             <button
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl border border-gray-300 hover:bg-gray-100 text-gray-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              className="py-2.5 px-3.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-800 border border-rose-200 hover:border-rose-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs flex-1"
+              title="রিসিট বন্ধ করুন / Close Receipt"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span>শপিং চালিয়ে যান</span>
+              <X className="w-4 h-4 text-rose-600" strokeWidth={2.5} />
+              <span>(X) Close / রিসিট বন্ধ করুন</span>
+            </button>
+          </div>
+
+          <div className="pt-2 text-center print:hidden">
+            <button
+              onClick={onClose}
+              className="text-[11px] text-gray-500 hover:text-gray-800 inline-flex items-center gap-1 transition-colors cursor-pointer"
+            >
+              <ShoppingBag className="w-3.5 h-3.5 text-gray-400" />
+              <span>হোমপেজে ফিরে কেনাকাটা চালিয়ে যান (Continue Shopping)</span>
             </button>
           </div>
 

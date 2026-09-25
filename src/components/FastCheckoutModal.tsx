@@ -334,7 +334,7 @@ export const FastCheckoutModal: React.FC<FastCheckoutModalProps> = ({
 
     // Simulate fast order processing like Laravel backend
     setTimeout(() => {
-      const generatedOrderId = `BX-${Math.floor(10000 + Math.random() * 90000)}`;
+      const generatedOrderId = `GPE-${Math.floor(10000 + Math.random() * 90000)}`;
       
       const newOrder: Order = {
         id: generatedOrderId,

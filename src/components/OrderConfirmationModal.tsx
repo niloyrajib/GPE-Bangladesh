@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
-import { CheckCircle, Copy, Check, Printer, ArrowRight, Truck, Phone, Package } from 'lucide-react';
+import {
+  CheckCircle,
+  Copy,
+  Check,
+  Printer,
+  Truck,
+  Phone,
+  Package,
+  ShieldCheck,
+  FileText,
+  X,
+  MapPin,
+  Calendar,
+  CreditCard,
+  ShoppingBag
+} from 'lucide-react';
 import { Order } from '../types';
 import { STORE_SETTINGS } from '../data/mockData';
+import { GpeLogo } from './GpeLogo';
 
 interface OrderConfirmationModalProps {
   order: Order | null;
@@ -29,148 +45,298 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/65 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 print:p-0 print:bg-white">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 print:p-0 print:bg-white print:static print:inset-auto">
       <div
-        className="bg-white rounded-2xl max-w-xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 print:shadow-none print:border-none print:max-h-none print:max-w-none"
+        className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 border border-gray-200 print:shadow-none print:border-none print:max-h-none print:max-w-none print:rounded-none"
         onClick={(e) => e.stopPropagation()}
       >
-        
-        {/* Success Header */}
-        <div className="p-6 text-center bg-gradient-to-b from-emerald-50 to-white border-b border-emerald-100">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-inner">
-            <CheckCircle className="w-10 h-10" />
-          </div>
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900">
-            ধন্যবাদ! আপনার অর্ডার সফল হয়েছে
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-600 mt-1">
-            আমাদের কাস্টমার কেয়ার প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন।
-          </p>
+        {/* Close Button (Hidden on Print) */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors print:hidden z-10"
+          title="বন্ধ করুন"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-          {/* Order ID Badge with copy */}
-          <div className="mt-4 inline-flex items-center gap-2 bg-emerald-100/80 border border-emerald-300 px-4 py-2 rounded-xl">
-            <span className="text-xs text-emerald-800 font-semibold">অর্ডার আইডি:</span>
-            <span className="text-sm sm:text-base font-black font-mono text-emerald-950">
-              {order.id}
-            </span>
-            <button
-              onClick={handleCopyId}
-              className="ml-1 p-1 hover:bg-emerald-200 text-emerald-800 rounded-md transition-colors"
-              title="Copy Order ID"
-            >
-              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-            </button>
+        {/* ========================================================
+            OFFICIAL MONEY RECEIPT & INVOICE HEADER (With GPE LOGO)
+            ======================================================== */}
+        <div className="p-5 sm:p-6 bg-gradient-to-b from-emerald-50/80 via-white to-white border-b border-gray-200">
+          {/* Top Branding Row */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 border-b border-dashed border-gray-200 pb-4">
+            {/* GPE Official Logo */}
+            <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+              <div className="max-w-[260px] sm:max-w-[300px]">
+                <GpeLogo variant="full" />
+              </div>
+              <p className="text-[11px] text-gray-500 font-medium mt-1">
+                {STORE_SETTINGS.address}
+              </p>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-0.5 text-[11px] text-gray-600 mt-0.5">
+                <span>হটলাইন: <strong>{STORE_SETTINGS.phone}</strong></span>
+                <span>•</span>
+                <span>ইমেইল: <strong>{STORE_SETTINGS.email}</strong></span>
+              </div>
+            </div>
+
+            {/* Receipt / Invoice Type Badge */}
+            <div className="text-center sm:text-right shrink-0">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold shadow-xs">
+                <FileText className="w-3.5 h-3.5" />
+                <span>মানি রিসিট ও ক্যাশ মেমো</span>
+              </div>
+              <p className="text-[10px] text-gray-500 font-mono mt-1">
+                MONEY RECEIPT & INVOICE
+              </p>
+              <p className="text-[11px] text-gray-600 mt-1 flex items-center justify-center sm:justify-end gap-1">
+                <Calendar className="w-3 h-3 text-gray-400" />
+                <span>{order.createdAt}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Success Banner */}
+          <div className="mt-4 flex items-center gap-3 bg-emerald-50 border border-emerald-200 p-3 rounded-xl print:bg-transparent print:border-emerald-300">
+            <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <CheckCircle className="w-6 h-6" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-bold text-emerald-950">
+                ধন্যবাদ! আপনার অর্ডার সফলভাবে গ্রহণ করা হয়েছে
+              </h2>
+              <p className="text-xs text-emerald-800">
+                অর্ডার নিশ্চিতকরণে আমাদের প্রতিনিধি কিছুক্ষণের মধ্যেই আপনার মোবাইল ফোনে কল করবেন।
+              </p>
+            </div>
+          </div>
+
+          {/* Order ID & Status Highlights */}
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            {/* Order ID with Copy */}
+            <div className="bg-white border-2 border-emerald-500/40 rounded-xl p-2.5 flex items-center justify-between shadow-xs">
+              <div>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">অর্ডার আইডি</span>
+                <span className="text-base sm:text-lg font-black font-mono text-emerald-950 tracking-tight">
+                  {order.id}
+                </span>
+              </div>
+              <button
+                onClick={handleCopyId}
+                className="p-1.5 hover:bg-emerald-50 text-emerald-700 rounded-lg transition-colors border border-emerald-200 print:hidden"
+                title="অর্ডার আইডি কপি করুন"
+              >
+                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              </button>
+            </div>
+
+            {/* Payment Method */}
+            <div className="bg-white border border-gray-200 rounded-xl p-2.5 shadow-xs">
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">পেমেন্ট মেথড</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-900 block truncate">
+                {order.paymentMethod === 'cod'
+                  ? 'ক্যাশ অন ডেলিভারি (COD)'
+                  : order.paymentMethod.toUpperCase()}
+              </span>
+              <span className="text-[10px] font-semibold text-rose-600">
+                {order.paymentStatus === 'paid' ? '✓ পরিশোধিত (PAID)' : 'পণ্য পেয়ে মূল্য পরিশোধ'}
+              </span>
+            </div>
+
+            {/* Total Payable Bill */}
+            <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-2.5 shadow-xs">
+              <span className="text-[10px] font-bold text-rose-700 uppercase tracking-wider block">সর্বমোট প্রদেয় বিল</span>
+              <span className="text-base sm:text-lg font-black font-mono text-rose-600">
+                ৳{order.total.toLocaleString()}
+              </span>
+              <span className="text-[10px] text-gray-500 block truncate">
+                {order.items.length} টি পণ্য
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Invoice Body */}
+        {/* ========================================================
+            INVOICE BODY: CUSTOMER DETAILS & ITEM BREAKDOWN
+            ======================================================== */}
         <div className="p-5 sm:p-6 space-y-4">
           
-          {/* Customer & Delivery Details */}
-          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 text-xs space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-500 font-medium">গ্রাহকের নাম:</span>
-              <span className="font-bold text-gray-900">{order.customerName}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 font-medium">মোবাইল নাম্বার:</span>
-              <span className="font-bold font-mono text-gray-900">{order.phone}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 font-medium">ডেলিভারি ঠিকানা:</span>
-              <span className="font-medium text-gray-900 text-right max-w-xs">{order.address}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 font-medium">পেমেন্ট মেথড:</span>
-              <span className="font-bold uppercase text-rose-600">
-                {order.paymentMethod === 'cod' ? 'ক্যাশ অন ডেলিভারি (COD)' : order.paymentMethod}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 font-medium">ডেলিভারি এরিয়া:</span>
-              <span className="font-semibold text-gray-800">{order.cityDivision}</span>
+          {/* Customer & Delivery Information Card */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 text-xs">
+            <h3 className="font-bold text-gray-800 uppercase tracking-wider text-[11px] mb-2.5 flex items-center gap-1.5 pb-1.5 border-b border-gray-200">
+              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+              <span>গ্রাহক ও ডেলিভারি বিবরণ (Customer & Shipping Details)</span>
+            </h3>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
+              <div className="flex justify-between sm:justify-start sm:gap-4">
+                <span className="text-gray-500 font-medium w-28 shrink-0">গ্রাহকের নাম:</span>
+                <span className="font-bold text-gray-900">{order.customerName}</span>
+              </div>
+              <div className="flex justify-between sm:justify-start sm:gap-4">
+                <span className="text-gray-500 font-medium w-28 shrink-0">মোবাইল নাম্বার:</span>
+                <span className="font-bold font-mono text-gray-900">{order.phone}</span>
+              </div>
+              <div className="flex justify-between sm:justify-start sm:gap-4 sm:col-span-2">
+                <span className="text-gray-500 font-medium w-28 shrink-0">ডেলিভারি ঠিকানা:</span>
+                <span className="font-medium text-gray-900">{order.address}</span>
+              </div>
+              <div className="flex justify-between sm:justify-start sm:gap-4">
+                <span className="text-gray-500 font-medium w-28 shrink-0">ডেলিভারি এলাকা:</span>
+                <span className="font-semibold text-gray-800">{order.cityDivision}</span>
+              </div>
+              {order.district && (
+                <div className="flex justify-between sm:justify-start sm:gap-4">
+                  <span className="text-gray-500 font-medium w-28 shrink-0">জেলা:</span>
+                  <span className="font-semibold text-gray-800">{order.district}</span>
+                </div>
+              )}
+              {order.trxId && (
+                <div className="flex justify-between sm:justify-start sm:gap-4 sm:col-span-2">
+                  <span className="text-gray-500 font-medium w-28 shrink-0">TrxID / ট্রানজেকশন:</span>
+                  <span className="font-bold font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    {order.trxId}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Items Breakdown */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 mb-2 flex items-center gap-1.5">
-              <Package className="w-4 h-4 text-rose-600" />
-              <span>পণ্যের বিবরণ</span>
-            </h4>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {order.items.map((it, i) => (
-                <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-gray-50 border border-gray-100 text-xs">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <img src={it.image} alt="" className="w-9 h-9 rounded object-cover flex-shrink-0" />
+          {/* Product Items Breakdown Table */}
+          <div className="border border-gray-200 rounded-xl overflow-hidden shadow-xs">
+            <div className="bg-gray-100/80 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
+                <Package className="w-4 h-4 text-emerald-600" />
+                <span>অর্ডারকৃত পণ্যের বিবরণ (Ordered Items)</span>
+              </h4>
+              <span className="text-[11px] font-semibold text-gray-500">
+                মোট {order.items.reduce((s, it) => s + it.quantity, 0)} টি
+              </span>
+            </div>
+
+            <div className="divide-y divide-gray-100 max-h-56 overflow-y-auto">
+              {order.items.map((it, idx) => (
+                <div key={idx} className="p-3 flex items-center justify-between gap-3 hover:bg-gray-50/60 transition-colors text-xs">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <img
+                      src={it.image}
+                      alt={it.name}
+                      className="w-11 h-11 rounded-lg object-cover border border-gray-200 shrink-0"
+                    />
                     <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate max-w-[200px] sm:max-w-xs">{it.name}</p>
-                      <p className="text-[11px] text-gray-500">{it.color ? `কালার: ${it.color} | ` : ''}পরিমাণ: {it.quantity} টি</p>
+                      <p className="font-semibold text-gray-900 line-clamp-1">{it.name}</p>
+                      <div className="flex items-center gap-2 text-[11px] text-gray-500 mt-0.5">
+                        {it.color && (
+                          <span className="bg-gray-100 px-1.5 py-0.2 rounded text-gray-700 font-medium">
+                            রঙ: {it.color}
+                          </span>
+                        )}
+                        {it.size && (
+                          <span className="bg-gray-100 px-1.5 py-0.2 rounded text-gray-700 font-medium">
+                            সাইজ: {it.size}
+                          </span>
+                        )}
+                        <span>পরিমাণ: <strong>{it.quantity} টি</strong></span>
+                        <span>×</span>
+                        <span className="font-mono">৳{it.price.toLocaleString()}</span>
+                      </div>
                     </div>
                   </div>
-                  <span className="font-bold text-gray-900 font-mono">৳{(it.price * it.quantity).toLocaleString()}</span>
+                  <div className="text-right shrink-0">
+                    <span className="font-bold text-gray-900 font-mono text-sm block">
+                      ৳{(it.price * it.quantity).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Pricing Calculation */}
-          <div className="border-t border-gray-200 pt-3 space-y-1.5 text-xs text-gray-600">
-            <div className="flex justify-between">
-              <span>সাবটোটাল</span>
-              <span className="font-medium text-gray-900">৳{order.subtotal.toLocaleString()}</span>
-            </div>
-            {order.discount > 0 && (
-              <div className="flex justify-between text-emerald-600 font-semibold">
-                <span>ডিসকাউন্ট</span>
-                <span>-৳{order.discount.toLocaleString()}</span>
+            {/* Financial Summary */}
+            <div className="bg-gray-50 p-4 border-t border-gray-200 space-y-1.5 text-xs text-gray-600">
+              <div className="flex justify-between">
+                <span>পণ্যের মোট মূল্য (Subtotal):</span>
+                <span className="font-semibold text-gray-900 font-mono">৳{order.subtotal.toLocaleString()}</span>
               </div>
-            )}
-            <div className="flex justify-between">
-              <span>ডেলিভারি চার্জ</span>
-              <span className="font-medium text-gray-900">৳{order.deliveryCharge.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-base font-black text-gray-900 pt-2 border-t border-gray-200">
-              <span>সর্বমোট প্রদেয় বিল:</span>
-              <span className="text-rose-600 font-mono">৳{order.total.toLocaleString()}</span>
+              {order.discount > 0 && (
+                <div className="flex justify-between text-emerald-600 font-semibold">
+                  <span>ডিসকাউন্ট {order.couponCode ? `(কুপন: ${order.couponCode})` : ''}:</span>
+                  <span className="font-mono">-৳{order.discount.toLocaleString()}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span>ডেলিভারি চার্জ ({order.cityDivision}):</span>
+                <span className="font-semibold text-gray-900 font-mono">৳{order.deliveryCharge.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-base font-black text-gray-900 pt-2 border-t border-gray-300">
+                <span className="flex items-center gap-1.5">
+                  <CreditCard className="w-4 h-4 text-emerald-600" />
+                  <span>সর্বমোট প্রদেয় বিল (Total Payable):</span>
+                </span>
+                <span className="text-rose-600 font-mono text-lg">৳{order.total.toLocaleString()}</span>
+              </div>
             </div>
           </div>
 
-          {/* Call helpline note */}
-          <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 flex items-center gap-2">
-            <Phone className="w-4 h-4 text-amber-600 flex-shrink-0" />
-            <span>
-              অর্ডার সংক্রান্ত যেকোনো তথ্যের জন্য আমাদের হটলাইনে ({STORE_SETTINGS.phone}) কল করতে পারেন।
-            </span>
+          {/* Genuine Trust Guarantee Seal & Note */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div className="p-3 bg-emerald-50/70 rounded-xl border border-emerald-200 text-[11px] text-emerald-950 flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block font-bold">GPE Bangladesh ১০০% অরিজিনাল গ্যারান্টি</strong>
+                <span>ডেলিভারি পাওয়ার পর ডেলিভারিম্যানের সামনে পার্সেল চেক করে নিশ্চিন্তে রিসিভ করুন।</span>
+              </div>
+            </div>
+
+            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-950 flex items-start gap-2.5">
+              <Phone className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block font-bold">কাস্টমার কেয়ার হেল্পলাইন</strong>
+                <span>যে কোনো প্রশ্ন বা পরিবর্তনের জন্য কল করুন: <strong>{STORE_SETTINGS.phone}</strong></span>
+              </div>
+            </div>
           </div>
 
-          {/* Actions */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-2.5 print:hidden">
+          {/* Action Buttons (Hidden when printing) */}
+          <div className="pt-3 flex flex-col sm:flex-row gap-2.5 print:hidden">
+            <button
+              onClick={handlePrint}
+              className="py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-emerald-700/20 cursor-pointer"
+            >
+              <Printer className="w-4 h-4" />
+              <span>মানি রিসিট প্রিন্ট করুন (Print Receipt)</span>
+            </button>
+
             <button
               onClick={() => {
                 onClose();
                 onTrackOrder(order.id);
               }}
-              className="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              className="py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
-              <Truck className="w-4 h-4 text-rose-400" />
-              <span>অর্ডার ট্র্যাক করুন (Live Tracking)</span>
-            </button>
-
-            <button
-              onClick={handlePrint}
-              className="py-2.5 px-4 rounded-xl border border-gray-300 hover:bg-gray-100 text-gray-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <Printer className="w-4 h-4" />
-              <span>প্রিন্ট রিসিট</span>
+              <Truck className="w-4 h-4 text-emerald-400" />
+              <span>লাইভ অর্ডার ট্র্যাক করুন</span>
             </button>
 
             <button
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer"
+              className="py-2.5 px-4 rounded-xl border border-gray-300 hover:bg-gray-100 text-gray-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
-              শপিং চালিয়ে যান
+              <ShoppingBag className="w-4 h-4" />
+              <span>শপিং চালিয়ে যান</span>
             </button>
+          </div>
+
+          {/* Print Footer Notice (Visible only when printed) */}
+          <div className="hidden print:block pt-6 text-center text-[10px] text-gray-500 border-t border-gray-200 mt-6">
+            <p className="font-bold text-gray-700">
+              GPE Bangladesh • গ্যাজেট • ফোন • ইলেকট্রনিক্স
+            </p>
+            <p>
+              হটলাইন: {STORE_SETTINGS.phone} | ইমেইল: {STORE_SETTINGS.email} | ওয়েবসাইট: gpebangladesh.store
+            </p>
+            <p className="mt-1">
+              এটি একটি কম্পিউটার জেনারেটেড ডিজিটাল মানি রিসিট। কোনো স্বাক্ষরের প্রয়োজন নেই।
+            </p>
           </div>
 
         </div>

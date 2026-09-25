@@ -161,7 +161,7 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: string; // e.g. BX-89312
+  id: string; // e.g. GPE-89312
   createdAt: string;
   customerName: string;
   phone: string;

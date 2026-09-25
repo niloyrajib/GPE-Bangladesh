@@ -127,7 +127,7 @@ export const PRODUCTS: Product[] = [
     isTrending: true,
     badge: 'SHOPIFY FEATURED',
     brand: 'Merrono',
-    sku: 'BX-STAND-881',
+    sku: 'GPE-STAND-881',
     shortDescription: 'Create a comfortable and organized workspace with this Multi-Function Laptop & Tablet Stand. Designed for modern users, this adjustable stand supports laptops, tablets, and smartphones.',
     description: `Create a comfortable and organized workspace with this Multi-Function Laptop & Tablet Stand. Designed for modern users, this adjustable stand supports laptops, tablets, and smartphones while providing flexible viewing angles for better comfort during work, study, meetings, and entertainment.
 
@@ -195,7 +195,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
       googleAgeGroup: 'Adult',
       googleCondition: 'New',
       googleGender: 'Unisex',
-      googleMpn: 'BX-STAND-881'
+      googleMpn: 'GPE-STAND-881'
     },
     seo: {
       title: 'Multi-Function Foldable Laptop & Tablet Stand – Portable Adjustable Desk Stand',
@@ -229,7 +229,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'FLASH DEAL',
     brand: 'Ultra Series',
-    sku: 'BX-SW-902',
+    sku: 'GPE-SW-902',
     shortDescription: 'Latest 2026 Edition with full screen infinite display, Bluetooth voice calls, heart rate monitoring, sports modes, and wireless charging dock.',
     description: 'The T900 Ultra 2 is the most popular rugged smart watch in Bangladesh with an ultra-bright 2.09-inch HD infinite touch display, waterproof casing, customizable watch faces, dual straps, and high-fidelity speaker for seamless phone calling.',
     banglaDescription: 'টি৯০০ আল্ট্রা ২ সম্পূর্ণ নতুন সংস্করণে রয়েছে ২.০৯ ইঞ্চির বিশাল ডিসপ্লে, সরাসরি মোবাইল কল রিসিভ ও ডায়াল করার সুবিধা, হার্ট রেট ও স্লিপ ট্র্যাকার এবং ওয়্যারলেস চার্জিং ডক। ক্যাশ অন ডেলিভারি সুবিধা সহ ঘরে বসেই পেয়ে যান।',
@@ -282,7 +282,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'BEST SELLER',
     brand: 'Lenovo',
-    sku: 'BX-AUD-40',
+    sku: 'GPE-AUD-40',
     shortDescription: 'Upgraded Bluetooth 5.1 chip, low gaming latency, deep bass diaphragm, ergonomic comfortable semi-in-ear fit, and Type-C fast charging.',
     description: 'Lenovo LP40 Pro offers audiophile-grade sound quality in a compact, lightweight case. Equipped with smart touch controls, auto instant pairing upon opening the lid, and noise reduction for clear HD calls.',
     banglaDescription: '১০০% অরিজিনাল লেনোভো এলপি৪০ প্রো ইয়ারবাডস। অসাধারণ ভারী বাস ও স্বচ্ছ ক্রিস্টাল অডিও কোয়ালিটি। গেমিং এর জন্য লো ল্যাটেন্সি এবং একটানা ৪-৫ ঘন্টা ব্যাটারি ব্যাকআপ।',
@@ -331,7 +331,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isFeatured: true,
     isTrending: false,
     brand: 'Baseus',
-    sku: 'BX-PWR-65',
+    sku: 'GPE-PWR-65',
     shortDescription: 'Next-Gen GaN5 technology. Charges laptops, MacBooks, iPhones, and Android smartphones at maximum turbo speeds simultaneously.',
     description: 'Upgraded GaN5 technology makes this Baseus charger 53% smaller with enhanced heat dissipation. Featuring 2x USB-C PD 65W ports and 1x USB-A QC 60W port, you can charge your laptop, tablet, and smartphone from a single wall socket safely.',
     banglaDescription: 'বেসিয়াস অরিজিনাল ৬৫ ওয়াট ফাস্ট চার্জার। একই সাথে ল্যাপটপ, আইফোন ও অ্যান্ড্রয়েড ফোন সুপার ফাস্ট গতিতে চার্জ করার সেরা সমাধান। সাথে ফ্রি পাচ্ছেন ১০০ ওয়াট টাইপ-সি ক্যাবল।',
@@ -381,7 +381,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'POPULAR',
     brand: 'Remax',
-    sku: 'BX-PB-292',
+    sku: 'GPE-PB-292',
     shortDescription: 'Massive 20000mAh capacity with 22.5W Huawei SuperCharge and 20W PD two-way fast charging, precise smart LED battery percentage screen.',
     description: 'Never run out of power on the go. The Remax RPP-292 features airline-approved safety ratings, a scratch-resistant textured polycarbonate body, and charges typical smartphones 4 to 5 times on a single full charge.',
     banglaDescription: 'রিমেক্স ২০০০০ এমএএইচ অরিজিনাল পাওয়ার ব্যাংক। এলইডি ডিজিটাল ডিসপ্লেতে ব্যাটারির শতকরা পরিমাণ দেখা যায়। ২২.৫ ওয়াট ফাস্ট চার্জিং এর সাহায্যে মাত্র ৩০ মিনিটে ৬০% চার্জ সম্পন্ন হয়।',
@@ -431,7 +431,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'TOP DEAL',
     brand: 'Vintage',
-    sku: 'BX-TRM-T9',
+    sku: 'GPE-TRM-T9',
     shortDescription: 'Full metal vintage carved body, ultra-sharp T-blade zero-gapped cutter head, rechargeable USB lithium battery with 4 guide combs.',
     description: 'Achieve barber-quality beard lining, hair fading, and trimming at home. The Vintage T9 features a silent high-torque rotary motor, titanium carbon steel T-blade that does not pinch skin, and 120 minutes of continuous runtime.',
     banglaDescription: 'বর্তমানে বাংলাদেশের সবচেয়ে জনপ্রিয় ভিন্টেজ টি৯ ট্রিমার। সম্পূর্ণ মেটাল খোদাই করা বডি, ৪টি ভিন্ন সাইজের কাটিং ক্লিপ এবং রিচার্জেবল ব্যাটারি। দাড়ি ও চুল নিখুঁতভাবে সাইজ করার আদর্শ গ্যাজেট।',
@@ -479,7 +479,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isFeatured: true,
     isTrending: false,
     brand: 'New Era Style',
-    sku: 'BX-CAP-NY',
+    sku: 'GPE-CAP-NY',
     shortDescription: '100% breathable heavy cotton twill, high-density 3D stitched raised NY monogram, sweat-wicking inner headband, adjustable brass buckle strap.',
     description: 'Step out in timeless urban street style. This structured 6-panel cap maintains its crisp shape all day, features pre-curved visor for UV sun protection, and fits all head sizes seamlessly with the back closure buckle.',
     banglaDescription: '১০০% পিওর কটন ফেব্রিকের তৈরি ক্লাসিক এনওয়াই বেসবল ক্যাপ। প্রিমিয়াম ৩ডি স্টিচিং এবং অ্যাডজাস্টেবল সাইজ যা যেকোনো কারো মাথায় পারফেক্টভাবে ফিট হয়। রোদ ও গরমে প্রতিদিনের ব্যবহারের জন্য অত্যন্ত আরামদায়ক।',
@@ -529,7 +529,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'CREATOR PICK',
     brand: 'K8 Studio',
-    sku: 'BX-MIC-K8',
+    sku: 'GPE-MIC-K8',
     shortDescription: 'Plug-and-play wireless collar mic for Facebook Live, YouTube videos, TikTok, vlogs, and online classes. No app or Bluetooth pairing needed.',
     description: 'Simply plug the receiver into your mobile port and clip the transmitter mic to your collar. Built-in DSP chip filters out ambient street wind and crowd noise, recording pristine 360-degree omnidirectional studio audio up to 20 meters away.',
     banglaDescription: 'ইউটিউব কনটেন্ট ক্রিয়েটর, টিকটক ও ফেসবুক লাইভের জন্য বেস্ট ওয়্যারলেস মাইক। কোনো ব্লুটুথ বা অ্যাপ লাগবে না—রিসিভার ফোনে লাগালেই সাথে সাথে কানেক্ট হয়ে যায়। আশেপাশের নয়েজ ব্লক করে স্পষ্ট ভয়েস রেকর্ড করে।',
@@ -576,7 +576,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isFeatured: true,
     isTrending: false,
     brand: 'Scarlett / DSP',
-    sku: 'BX-KET-2L',
+    sku: 'GPE-KET-2L',
     shortDescription: '1500W rapid boiling element boils 2 liters of tea water in under 3 minutes with automatic steam shut-off and boil-dry protection.',
     description: 'Food grade 304 stainless steel interior ensures safe, chemical-free drinking water. Features 360-degree swivel cordless base, one-touch pop-up lid, and ergonomic heat-insulated stay-cool handle.',
     banglaDescription: 'দ্রুত চা, কফি বা গরম পানির জন্য ২ লিটারের শক্তিশালী ইলেকট্রিক কেটলি। পানি ফুটে গেলে নিজে নিজেই সুইচ অফ হয়ে যায়। টেকসই স্টেইনলেস স্টিল বডি যা সহজে মরিচা ধরে না।',
@@ -625,7 +625,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'VIRAL',
     brand: 'SpaceCraft',
-    sku: 'BX-LGT-AST',
+    sku: 'GPE-LGT-AST',
     shortDescription: '360° magnetic rotating astronaut head projects breathtaking nebula clouds and twinkling laser stars across your bedroom ceiling.',
     description: 'Transform any room into a magical cosmic planetarium. Comes with 8 vivid nebula color modes, adjustable brightness, starry speed controls, and a smart sleep timer remote control.',
     banglaDescription: 'ঘরের ছাদ ও দেয়ালকে তৈরি করুন রাতের মায়াবী মহাকাশ! ৩৬০ ডিগ্রি ঘুরানো যায় এমন অ্যাস্ট্রোনট প্রজেক্টর। রিমোটের সাহায্যে আলোর রঙ, গতি এবং টাইমার সেট করা যায়। বাচ্চা ও বড় সবার অত্যন্ত পছন্দের উপহার।',
@@ -672,7 +672,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isFeatured: true,
     isTrending: false,
     brand: 'Meetion',
-    sku: 'BX-PC-9300',
+    sku: 'GPE-PC-9300',
     shortDescription: 'Rainbow backlit tactile keyboard with 19-key anti-ghosting, paired with high precision 3200 DPI ergonomic RGB gaming mouse.',
     description: 'Engineered for gamers, coders, and office enthusiasts. Features quiet tactile key switches, spill-resistant braided cable, multimedia hotkeys, and breathing RGB light effects.',
     banglaDescription: 'বাজেটের মধ্যে সেরা আরজিবি ব্যাকলিট গেমিং কিবোর্ড ও মাউস সেট। রাতের বেলা চমৎকার আলো ছড়ায়, কীস্ট্রোক অত্যন্ত স্মুথ ও টেকসই। ল্যাপটপ এবং ডেক্সটপ উভয়ের সাথে সরাসরি সাপোর্ট করে।',
@@ -719,7 +719,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: false,
     badge: 'HEALTHY LIFE',
     brand: 'DSP Germany',
-    sku: 'BX-AF-55',
+    sku: 'GPE-AF-55',
     shortDescription: 'Enjoy 85% less oil and guilt-free crispy fried chicken, fries, fish, and baked cakes with 360° rapid hot air vortex technology.',
     description: 'The DSP 5.5L Digital Air Fryer brings healthy gourmet cooking to Bangladeshi homes. Comes with an intuitive one-touch LED touchscreen with 8 pre-programmed food settings, non-stick dishwasher-safe basket, and automatic timer alert.',
     banglaDescription: 'তেল ছাড়া স্বাস্থ্যকর মুচমুচে চিকেন ফ্রাই, সমুচা, রোল ও ফ্রেঞ্চ ফ্রাই তৈরি করুন খুব সহজে। ৮৫% কম তেলে খাবার রান্না হয় যা পুরো পরিবারের স্বাস্থ্যের জন্য নিরাপদ। ৫.৫ লিটার ধারণক্ষমতা বড় পরিবারের জন্য আদর্শ।',
@@ -767,7 +767,7 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
     isTrending: true,
     badge: 'SUMMER HIT',
     brand: 'CoolBreeze',
-    sku: 'BX-FAN-NK',
+    sku: 'GPE-FAN-NK',
     shortDescription: 'Hands-free 360° twin turbine cooling around your neck. Safe bladeless design won\'t tangle long hair, 3 adjustable wind speeds.',
     description: 'Beat the Bangladeshi summer heat while commuting, walking outside, cooking, or traveling on public transport. The flexible medical silicone collar rests gently around the neck with whisper-quiet brushless motors.',
     banglaDescription: 'রাস্তায় জ্যামে বা রান্নার সময় ঘামের কষ্ট থেকে মুক্তি পান। গলায় ঝুলিয়ে রাখা যায় এই ব্লেডলেস নেক ফ্যান। চুল আটকে যাওয়ার কোনো ভয় নেই। একবার চার্জে ৬ ঘন্টা পর্যন্ত ঠান্ডা বাতাস প্রদান করে।',
@@ -796,7 +796,168 @@ Easy to fold, store, and carry — ideal for office, home, classroom, and travel
 
 export const INITIAL_ORDERS: Order[] = [
   {
-    id: 'BX-89210',
+    id: 'GPE-1005',
+    createdAt: '2026-09-25 13:08',
+    customerName: 'Tanvir Ahmed',
+    phone: '01712-345678',
+    altPhone: '01911-223344',
+    address: 'House 12, Road 5, Block C, Banani, Dhaka',
+    cityDivision: 'Inside Dhaka',
+    district: 'Dhaka',
+    thanaZone: 'Banani',
+    deliveryCharge: 60,
+    items: [
+      {
+        productId: 'prod-1',
+        name: 'T900 Ultra 2 Bluetooth Calling Smartwatch with 2.09" HD Display',
+        image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800&auto=format&fit=crop&q=80',
+        price: 1390,
+        quantity: 1,
+        color: 'Midnight Black + Matte Black Case'
+      },
+      {
+        productId: 'prod-shopify-stand-881',
+        name: 'Aluminum Adjustable Laptop Stand 360° Rotating Ergonomic Desk Riser',
+        image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80',
+        price: 1950,
+        quantity: 1,
+        color: 'Space Gray'
+      }
+    ],
+    subtotal: 3340,
+    discount: 150,
+    couponCode: 'WELCOME50',
+    total: 3250,
+    paymentMethod: 'cod',
+    paymentStatus: 'unpaid',
+    status: 'pending',
+    courierName: 'Steadfast Courier',
+    trackingNumber: 'ST-1005-DH89',
+    customerNotes: 'দয়া করে অফিস টাইমে ৩টার পর ডেলিভারি করবেন। আসার আগে কল দিবেন।',
+    timeline: [
+      {
+        status: 'pending',
+        title: 'Order Placed on Online Store',
+        description: 'Customer placed order #1005 via GPE Fast Express Checkout.',
+        timestamp: '25 Sep, 01:08 PM',
+        completed: true
+      },
+      {
+        status: 'pending',
+        title: 'Confirmation SMS Sent',
+        description: 'Automated order receipt & tracking link sent to 01712-345678.',
+        timestamp: '25 Sep, 01:09 PM',
+        completed: true
+      },
+      {
+        status: 'confirmed',
+        title: 'Order Verified by Support Executive',
+        description: 'Customer address and phone number confirmed via telephone call.',
+        timestamp: 'Pending Verification',
+        completed: false
+      },
+      {
+        status: 'processing',
+        title: 'Packed at Sorting Hub',
+        description: 'Quality inspected and safely packed for dispatch.',
+        timestamp: 'Pending Packing',
+        completed: false
+      },
+      {
+        status: 'shipped',
+        title: 'Handed to Courier Partner',
+        description: 'Consignment created with Steadfast Courier (ST-1005-DH89).',
+        timestamp: 'Pending Dispatch',
+        completed: false
+      },
+      {
+        status: 'delivered',
+        title: 'Delivered & Cash Collected',
+        description: '৳3,250 collected upon doorstep handover.',
+        timestamp: 'Pending Delivery',
+        completed: false
+      }
+    ]
+  },
+  {
+    id: 'GPE-14584',
+    createdAt: '2026-09-24 16:45',
+    customerName: 'Niloy Rajib',
+    phone: '01789-123456',
+    altPhone: '01678-901234',
+    address: 'Plot 18, Road 3, Sector 7, Uttara, Dhaka',
+    cityDivision: 'Inside Dhaka',
+    district: 'Dhaka',
+    thanaZone: 'Uttara',
+    deliveryCharge: 60,
+    items: [
+      {
+        productId: 'prod-2',
+        name: 'Lenovo LP40 Pro True Wireless Stereo Bluetooth Earbuds (TWS)',
+        image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&auto=format&fit=crop&q=80',
+        price: 890,
+        quantity: 1,
+        color: 'Pure White'
+      },
+      {
+        productId: 'prod-4',
+        name: 'Remax RPP-292 20000mAh 22.5W Fast Charging Power Bank',
+        image: 'https://images.unsplash.com/photo-1609592424368-23f261905ea5?w=800&auto=format&fit=crop&q=80',
+        price: 1850,
+        quantity: 1,
+        color: 'Dark Navy'
+      }
+    ],
+    subtotal: 2740,
+    discount: 100,
+    couponCode: 'EXPRESS50',
+    total: 2700,
+    paymentMethod: 'cod',
+    paymentStatus: 'unpaid',
+    status: 'confirmed',
+    courierName: 'Steadfast Courier',
+    trackingNumber: 'ST-14584-DH01',
+    customerNotes: 'Please call 30 minutes before arrival.',
+    timeline: [
+      {
+        status: 'pending',
+        title: 'Order Placed on Online Store',
+        description: 'Customer placed order GPE-14584 with Cash on Delivery.',
+        timestamp: '24 Sep, 04:45 PM',
+        completed: true
+      },
+      {
+        status: 'confirmed',
+        title: 'Phone Verification Completed',
+        description: 'Delivery address and item variant verified with customer.',
+        timestamp: '24 Sep, 05:10 PM',
+        completed: true
+      },
+      {
+        status: 'processing',
+        title: 'QC Checked & Barcoded',
+        description: 'Passed electrical QC inspection at Dhaka Central Hub.',
+        timestamp: '24 Sep, 07:30 PM',
+        completed: true
+      },
+      {
+        status: 'shipped',
+        title: 'Dispatched with Steadfast Courier',
+        description: 'Consignment ST-14584-DH01 in transit to Uttara Hub.',
+        timestamp: '25 Sep, 09:30 AM',
+        completed: true
+      },
+      {
+        status: 'delivered',
+        title: 'Delivered & Cash Collected',
+        description: 'Cash payment of ৳2,700 collected.',
+        timestamp: 'Pending Delivery',
+        completed: false
+      }
+    ]
+  },
+  {
+    id: 'GPE-89210',
     createdAt: '2026-09-12 14:30',
     customerName: 'Tanvir Hossain',
     phone: '01712345678',
@@ -873,7 +1034,7 @@ export const INITIAL_ORDERS: Order[] = [
     ]
   },
   {
-    id: 'BX-88145',
+    id: 'GPE-88145',
     createdAt: '2026-09-10 11:20',
     customerName: 'Nusrat Jahan',
     phone: '01855667788',

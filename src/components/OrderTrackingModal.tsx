@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Search, Truck, CheckCircle2, Clock, Package, MapPin, AlertCircle, Phone, ArrowRight } from 'lucide-react';
+import { X, Search, Truck, CheckCircle2, Clock, Package, MapPin, AlertCircle, Phone, ArrowRight, Printer, FileText } from 'lucide-react';
 import { Order } from '../types';
 import { STORE_SETTINGS } from '../data/mockData';
+import { OrderConfirmationModal } from './OrderConfirmationModal';
 
 interface OrderTrackingModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
     orders.find((o) => o.id.toLowerCase() === initialOrderId.toLowerCase()) || null
   );
   const [errorMsg, setErrorMsg] = useState('');
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
 
     const q = searchQuery.trim().toLowerCase();
     if (!q) {
-      setErrorMsg('অনুগ্রহ করে অর্ডার আইডি (যেমন: BX-89210) অথবা ফোন নাম্বার লিখুন');
+      setErrorMsg('অনুগ্রহ করে অর্ডার আইডি (যেমন: GPE-89210) অথবা ফোন নাম্বার লিখুন');
       return;
     }
 
@@ -92,7 +94,7 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="অর্ডার আইডি (যেমন: BX-89210) বা ফোন নম্বর"
+                  placeholder="অর্ডার আইডি (যেমন: GPE-89210) বা ফোন নম্বর"
                   className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-xs sm:text-sm text-gray-900 font-mono outline-none focus:bg-white focus:border-rose-600 focus:ring-2 focus:ring-rose-100 transition-all uppercase"
                 />
                 <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -135,9 +137,15 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-base font-black font-mono text-gray-900">
-                      {searchedOrder.id}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowReceipt(true)}
+                      className="text-base font-black font-mono text-gray-900 hover:text-rose-600 hover:underline flex items-center gap-1.5 cursor-pointer text-left transition-colors"
+                      title="ক্লিক করে মানি রিসিট দেখুন"
+                    >
+                      <span>{searchedOrder.id}</span>
+                      <Printer className="w-3.5 h-3.5 text-gray-400" />
+                    </button>
                     <span className="text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-rose-100 text-rose-700">
                       {searchedOrder.status}
                     </span>
@@ -237,13 +245,25 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
                       সর্বমোট: ৳{searchedOrder.total.toLocaleString()}
                     </p>
                   </div>
-                  <a
-                    href={`tel:${STORE_SETTINGS.phone}`}
-                    className="mt-2 text-[11px] text-rose-600 hover:text-rose-700 font-semibold flex items-center gap-1"
-                  >
-                    <Phone className="w-3 h-3" />
-                    <span>প্রয়োজনে কাস্টমার কেয়ারে কল করুন</span>
-                  </a>
+
+                  <div className="mt-2.5 pt-2 border-t border-gray-200 flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowReceipt(true)}
+                      className="py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>মানি রিসিট দেখুন ও প্রিন্ট করুন</span>
+                    </button>
+
+                    <a
+                      href={`tel:${STORE_SETTINGS.phone}`}
+                      className="text-[11px] text-rose-600 hover:text-rose-700 font-semibold flex items-center justify-center gap-1"
+                    >
+                      <Phone className="w-3 h-3" />
+                      <span>প্রয়োজনে কাস্টমার কেয়ারে কল করুন</span>
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -251,6 +271,15 @@ export const OrderTrackingModal: React.FC<OrderTrackingModalProps> = ({
           )}
 
         </div>
+
+        {/* View / Print GPE Money Receipt Modal */}
+        {showReceipt && searchedOrder && (
+          <OrderConfirmationModal
+            order={searchedOrder}
+            onClose={() => setShowReceipt(false)}
+            onTrackOrder={() => setShowReceipt(false)}
+          />
+        )}
 
       </div>
     </div>

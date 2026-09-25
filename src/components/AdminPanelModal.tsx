@@ -28,7 +28,8 @@ import {
   Eye,
   Bell,
   Store,
-  DownloadCloud
+  DownloadCloud,
+  Printer
 } from 'lucide-react';
 import { Order, OrderStatus, Product, ThemeConfig, Coupon } from '../types';
 import { generateGPESku, generateBarcode } from '../utils/productIdentifierHelper';
@@ -37,6 +38,8 @@ import { ShopifyProductEditor } from './Admin/ShopifyProductEditor';
 import { BulkProductImportModal } from './Admin/BulkProductImportModal';
 import { DropshipProductImportModal } from './Admin/DropshipProductImportModal';
 import { ShopifySidebar, ShopifyNavTab } from './Admin/ShopifySidebar';
+import { OrderConfirmationModal } from './OrderConfirmationModal';
+import { ShopifyOrderDetailView } from './Admin/views/ShopifyOrderDetailView';
 
 // Subviews
 import { ShopifyHomeView } from './Admin/views/ShopifyHomeView';
@@ -69,6 +72,7 @@ interface AdminPanelModalProps {
   onClose: () => void;
   orders: Order[];
   onUpdateOrderStatus: (orderId: string, newStatus: OrderStatus) => void;
+  onUpdateOrder?: (updatedOrder: Order) => void;
   products: Product[];
   onAddNewProduct: (product: Product) => void;
   onUpdateProduct: (product: Product) => void;
@@ -88,6 +92,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   onClose,
   orders,
   onUpdateOrderStatus,
+  onUpdateOrder,
   products,
   onAddNewProduct,
   onUpdateProduct,
@@ -126,6 +131,19 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   const [isEditorActive, setIsEditorActive] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
+  // Order Details Selection
+  const [selectedDetailOrder, setSelectedDetailOrder] = useState<Order | null>(null);
+
+  // Sync selectedDetailOrder if orders list changes
+  useEffect(() => {
+    if (selectedDetailOrder) {
+      const found = orders.find((o) => o.id === selectedDetailOrder.id);
+      if (found) {
+        setSelectedDetailOrder(found);
+      }
+    }
+  }, [orders]);
+
   // Search & Filter state
   const [globalSearch, setGlobalSearch] = useState('');
   const [orderSearchQuery, setOrderSearchQuery] = useState('');
@@ -138,6 +156,7 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
   const [abandonedCartsCount, setAbandonedCartsCount] = useState<number>(() => {
     return getStoredAbandonedCarts().filter((c) => c.recoveryStatus === 'unrecovered').length;
   });
+  const [selectedReceiptOrder, setSelectedReceiptOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     const handleCartsUpdate = () => {
@@ -378,6 +397,9 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                 activeTab={activeTab}
                 onSelectTab={(tab) => {
                   setIsEditorActive(false);
+                  if (tab === 'orders') {
+                    setSelectedDetailOrder(null);
+                  }
                   setActiveTab(tab);
                 }}
                 ordersCount={orders.length}
@@ -411,165 +433,216 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                       <ShopifyHomeView
                         orders={orders}
                         products={products}
-                        onNavigate={(tab) => setActiveTab(tab)}
+                        onNavigate={(tab) => {
+                          if (tab === 'orders') {
+                            setSelectedDetailOrder(null);
+                          }
+                          setActiveTab(tab);
+                        }}
                         onOpenNewProduct={handleOpenNewProductEditor}
                       />
                     )}
 
                     {/* VIEW 2: ORDERS */}
                     {activeTab === 'orders' && (
-                      <div className="space-y-4 max-w-6xl mx-auto">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
-                          <div>
+                      selectedDetailOrder ? (
+                        <ShopifyOrderDetailView
+                          order={selectedDetailOrder}
+                          orders={orders}
+                          onBack={() => setSelectedDetailOrder(null)}
+                          onSelectOrder={(ord) => setSelectedDetailOrder(ord)}
+                          onUpdateOrder={(updatedOrd) => {
+                            setSelectedDetailOrder(updatedOrd);
+                            if (onUpdateOrder) {
+                              onUpdateOrder(updatedOrd);
+                            } else {
+                              onUpdateOrderStatus(updatedOrd.id, updatedOrd.status);
+                            }
+                          }}
+                          onOpenReceipt={(ord) => setSelectedReceiptOrder(ord)}
+                          showToast={showToast}
+                        />
+                      ) : (
+                        <div className="space-y-4 max-w-6xl mx-auto">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-xl border border-gray-200 shadow-xs">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h1 className="text-lg font-bold text-gray-900">Orders</h1>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-800">
+                                  {orders.length} Total
+                                </span>
+                              </div>
+                              <p className="text-xs text-gray-500 mt-0.5">
+                                Manage order verification, cash on delivery confirmations, and courier dispatches.
+                              </p>
+                            </div>
+
                             <div className="flex items-center gap-2">
-                              <h1 className="text-lg font-bold text-gray-900">Orders</h1>
-                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-800">
-                                {orders.length} Total
+                              <span className="text-xs font-mono font-bold text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100">
+                                Total: ৳{orders.reduce((sum, o) => sum + o.total, 0).toLocaleString()}
                               </span>
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              Manage order verification, cash on delivery confirmations, and courier dispatches.
-                            </p>
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-bold text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100">
-                              Total: ৳{orders.reduce((sum, o) => sum + o.total, 0).toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
+                          {/* Search & Filter Bar */}
+                          <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
+                            <div className="relative w-full sm:w-80">
+                              <input
+                                type="text"
+                                value={orderSearchQuery}
+                                onChange={(e) => setOrderSearchQuery(e.target.value)}
+                                placeholder="Search by Order ID, customer phone or name..."
+                                className="w-full pl-9 pr-3 py-2 text-xs border border-gray-300 rounded-lg outline-none focus:border-gray-900"
+                              />
+                              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                            </div>
 
-                        {/* Search & Filter Bar */}
-                        <div className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
-                          <div className="relative w-full sm:w-80">
-                            <input
-                              type="text"
-                              value={orderSearchQuery}
-                              onChange={(e) => setOrderSearchQuery(e.target.value)}
-                              placeholder="Search by Order ID, customer phone or name..."
-                              className="w-full pl-9 pr-3 py-2 text-xs border border-gray-300 rounded-lg outline-none focus:border-gray-900"
-                            />
-                            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                            <div className="flex items-center gap-1.5 self-start sm:self-auto text-xs overflow-x-auto pb-1 max-w-full">
+                              <span className="text-gray-500 font-medium">Status:</span>
+                              {['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'].map(
+                                (st) => (
+                                  <button
+                                    key={st}
+                                    type="button"
+                                    onClick={() => setOrderFilterStatus(st)}
+                                    className={`px-2.5 py-1 rounded-md capitalize font-medium whitespace-nowrap transition-colors ${
+                                      orderFilterStatus === st
+                                        ? 'bg-gray-900 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                                  >
+                                    {st}
+                                  </button>
+                                )
+                              )}
+                            </div>
                           </div>
 
-                          <div className="flex items-center gap-1.5 self-start sm:self-auto text-xs overflow-x-auto pb-1 max-w-full">
-                            <span className="text-gray-500 font-medium">Status:</span>
-                            {['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'].map(
-                              (st) => (
-                                <button
-                                  key={st}
-                                  type="button"
-                                  onClick={() => setOrderFilterStatus(st)}
-                                  className={`px-2.5 py-1 rounded-md capitalize font-medium whitespace-nowrap transition-colors ${
-                                    orderFilterStatus === st
-                                      ? 'bg-gray-900 text-white'
-                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                  }`}
-                                >
-                                  {st}
-                                </button>
-                              )
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Orders Table */}
-                        <div className="border border-gray-200 rounded-xl overflow-x-auto shadow-xs bg-white">
-                          <table className="w-full text-left text-xs text-gray-600">
-                            <thead className="bg-gray-50 text-gray-700 font-bold border-b border-gray-200 uppercase text-[10.5px]">
-                              <tr>
-                                <th className="p-3.5">Order & Time</th>
-                                <th className="p-3.5">Customer details</th>
-                                <th className="p-3.5">Items</th>
-                                <th className="p-3.5">Total bill</th>
-                                <th className="p-3.5">Payment</th>
-                                <th className="p-3.5">Courier</th>
-                                <th className="p-3.5">Fulfillment Status</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100 font-medium">
-                              {filteredOrders.length === 0 ? (
+                          {/* Orders Table */}
+                          <div className="border border-gray-200 rounded-xl overflow-x-auto shadow-xs bg-white">
+                            <table className="w-full text-left text-xs text-gray-600">
+                              <thead className="bg-gray-50 text-gray-700 font-bold border-b border-gray-200 uppercase text-[10.5px]">
                                 <tr>
-                                  <td colSpan={7} className="p-8 text-center text-gray-400">
-                                    No orders found matching this filter
-                                  </td>
+                                  <th className="p-3.5">Order & Time</th>
+                                  <th className="p-3.5">Customer details</th>
+                                  <th className="p-3.5">Items</th>
+                                  <th className="p-3.5">Total bill</th>
+                                  <th className="p-3.5">Payment</th>
+                                  <th className="p-3.5">Courier</th>
+                                  <th className="p-3.5">Fulfillment Status</th>
+                                  <th className="p-3.5 text-center">মানি রিসিট</th>
                                 </tr>
-                              ) : (
-                                filteredOrders.map((ord) => (
-                                  <tr key={ord.id} className="hover:bg-gray-50/80 transition-colors">
-                                    <td className="p-3.5">
-                                      <span className="font-bold font-mono text-gray-900 block">{ord.id}</span>
-                                      <span className="text-[10px] text-gray-400">{ord.createdAt}</span>
-                                    </td>
-
-                                    <td className="p-3.5">
-                                      <span className="font-bold text-gray-900 block">{ord.customerName}</span>
-                                      <span className="font-mono text-[11px] text-gray-500">{ord.phone}</span>
-                                      <span className="text-[10.5px] text-gray-400 block truncate max-w-[150px]">
-                                        {ord.address}
-                                      </span>
-                                    </td>
-
-                                    <td className="p-3.5">
-                                      <span className="font-semibold text-gray-800 block">
-                                        {ord.items.length} items
-                                      </span>
-                                      <span className="text-[10px] text-gray-400 truncate block max-w-[140px]">
-                                        {ord.items[0]?.name}
-                                      </span>
-                                    </td>
-
-                                    <td className="p-3.5 font-bold font-mono text-rose-600">
-                                      ৳{ord.total.toLocaleString()}
-                                    </td>
-
-                                    <td className="p-3.5">
-                                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800 block w-fit">
-                                        {ord.paymentMethod}
-                                      </span>
-                                      <span
-                                        className={`text-[10px] ${
-                                          ord.paymentStatus === 'paid' ? 'text-emerald-600' : 'text-amber-600'
-                                        }`}
-                                      >
-                                        {ord.paymentStatus === 'paid' ? 'Paid' : 'COD (Pending)'}
-                                      </span>
-                                    </td>
-
-                                    <td className="p-3.5">
-                                      <span className="text-gray-900 font-medium block">
-                                        {ord.courierName || 'Steadfast Courier'}
-                                      </span>
-                                      {ord.trackingNumber && (
-                                        <span className="text-[10px] font-mono text-slate-400">
-                                          {ord.trackingNumber}
-                                        </span>
-                                      )}
-                                    </td>
-
-                                    <td className="p-3.5">
-                                      <select
-                                        value={ord.status}
-                                        onChange={(e) =>
-                                          onUpdateOrderStatus(ord.id, e.target.value as OrderStatus)
-                                        }
-                                        className="text-xs font-bold px-2 py-1.5 rounded-lg border border-gray-300 bg-white shadow-xs outline-none focus:border-gray-900 cursor-pointer"
-                                      >
-                                        <option value="pending">Pending (অপেক্ষমান)</option>
-                                        <option value="confirmed">Confirmed (নিশ্চিত)</option>
-                                        <option value="processing">Processing (প্যাকিং)</option>
-                                        <option value="shipped">Shipped (কুরিয়ারে)</option>
-                                        <option value="delivered">Delivered (ডেলিভার্ড)</option>
-                                        <option value="cancelled">Cancelled (বাতিল)</option>
-                                      </select>
+                              </thead>
+                              <tbody className="divide-y divide-gray-100 font-medium">
+                                {filteredOrders.length === 0 ? (
+                                  <tr>
+                                    <td colSpan={8} className="p-8 text-center text-gray-400">
+                                      No orders found matching this filter
                                     </td>
                                   </tr>
-                                ))
-                              )}
-                            </tbody>
-                          </table>
+                                ) : (
+                                  filteredOrders.map((ord) => (
+                                    <tr key={ord.id} className="hover:bg-gray-50/80 transition-colors">
+                                      <td className="p-3.5">
+                                        <button
+                                          type="button"
+                                          onClick={() => setSelectedDetailOrder(ord)}
+                                          className="font-bold font-mono text-blue-600 hover:text-blue-800 hover:underline block text-left cursor-pointer transition-colors"
+                                          title="ক্লিক করে পুরো অর্ডার ডিটেইলস দেখুন"
+                                        >
+                                          {ord.id}
+                                        </button>
+                                        <span className="text-[10px] text-gray-400">{ord.createdAt}</span>
+                                      </td>
+
+                                      <td className="p-3.5">
+                                        <button
+                                          type="button"
+                                          onClick={() => setSelectedDetailOrder(ord)}
+                                          className="font-bold text-gray-900 hover:text-blue-600 block text-left cursor-pointer transition-colors"
+                                          title="ক্লিক করে কাস্টমার ও অর্ডার ডিটেইলস দেখুন"
+                                        >
+                                          {ord.customerName}
+                                        </button>
+                                        <span className="font-mono text-[11px] text-gray-500">{ord.phone}</span>
+                                        <span className="text-[10.5px] text-gray-400 block truncate max-w-[150px]">
+                                          {ord.address}
+                                        </span>
+                                      </td>
+
+                                      <td className="p-3.5">
+                                        <span className="font-semibold text-gray-800 block">
+                                          {ord.items.length} items
+                                        </span>
+                                        <span className="text-[10px] text-gray-400 truncate block max-w-[140px]">
+                                          {ord.items[0]?.name}
+                                        </span>
+                                      </td>
+
+                                      <td className="p-3.5 font-bold font-mono text-rose-600">
+                                        ৳{ord.total.toLocaleString()}
+                                      </td>
+
+                                      <td className="p-3.5">
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-800 block w-fit">
+                                          {ord.paymentMethod}
+                                        </span>
+                                        <span
+                                          className={`text-[10px] ${
+                                            ord.paymentStatus === 'paid' ? 'text-emerald-600' : 'text-amber-600'
+                                          }`}
+                                        >
+                                          {ord.paymentStatus === 'paid' ? 'Paid' : 'COD (Pending)'}
+                                        </span>
+                                      </td>
+
+                                      <td className="p-3.5">
+                                        <span className="text-gray-900 font-medium block">
+                                          {ord.courierName || 'Steadfast Courier'}
+                                        </span>
+                                        {ord.trackingNumber && (
+                                          <span className="text-[10px] font-mono text-slate-400">
+                                            {ord.trackingNumber}
+                                          </span>
+                                        )}
+                                      </td>
+
+                                      <td className="p-3.5">
+                                        <select
+                                          value={ord.status}
+                                          onChange={(e) =>
+                                            onUpdateOrderStatus(ord.id, e.target.value as OrderStatus)
+                                          }
+                                          className="text-xs font-bold px-2 py-1.5 rounded-lg border border-gray-300 bg-white shadow-xs outline-none focus:border-gray-900 cursor-pointer"
+                                        >
+                                          <option value="pending">Pending (অপেক্ষমান)</option>
+                                          <option value="confirmed">Confirmed (নিশ্চিত)</option>
+                                          <option value="processing">Processing (প্যাকিং)</option>
+                                          <option value="shipped">Shipped (কুরিয়ারে)</option>
+                                          <option value="delivered">Delivered (ডেলিভার্ড)</option>
+                                          <option value="cancelled">Cancelled (বাতিল)</option>
+                                        </select>
+                                      </td>
+
+                                      <td className="p-3.5 text-center">
+                                        <button
+                                          type="button"
+                                          onClick={() => setSelectedReceiptOrder(ord)}
+                                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold transition-colors cursor-pointer"
+                                          title="GPE মানি রিসিট দেখুন ও প্রিন্ট করুন"
+                                        >
+                                          <Printer className="w-3.5 h-3.5 text-emerald-600" />
+                                          <span>রিসিট</span>
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
-                      </div>
+                      )
                     )}
 
                     {/* VIEW: ABANDONED CHECKOUTS RECOVERY */}
@@ -837,7 +910,15 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
                     )}
 
                     {/* VIEW 4: CUSTOMERS */}
-                    {activeTab === 'customers' && <ShopifyCustomersView orders={orders} />}
+                    {activeTab === 'customers' && (
+                      <ShopifyCustomersView
+                        orders={orders}
+                        onSelectOrder={(ord) => {
+                          setSelectedDetailOrder(ord);
+                          setActiveTab('orders');
+                        }}
+                      />
+                    )}
 
                     {/* VIEW 5: GROWTH */}
                     {activeTab === 'growth' && <ShopifyGrowthView showToast={showToast} />}
@@ -1007,6 +1088,15 @@ export const AdminPanelModal: React.FC<AdminPanelModalProps> = ({
           }}
           showToast={showToast}
         />
+
+        {/* View / Print GPE Money Receipt Modal */}
+        {selectedReceiptOrder && (
+          <OrderConfirmationModal
+            order={selectedReceiptOrder}
+            onClose={() => setSelectedReceiptOrder(null)}
+            onTrackOrder={() => setSelectedReceiptOrder(null)}
+          />
+        )}
       </div>
     </div>
   );

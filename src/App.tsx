@@ -114,7 +114,37 @@ export default function App() {
     }
   }, [products]);
 
-  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [orders, setOrders] = useState<Order[]>(() => {
+    try {
+      const saved = localStorage.getItem('bx_orders');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // If any stored orders have old BX- prefix, migrate to GPE-
+          const migrated = parsed.map((ord: Order) => ({
+            ...ord,
+            id: ord.id.startsWith('BX-') ? ord.id.replace('BX-', 'GPE-') : ord.id
+          }));
+          // Ensure default orders (like GPE-1005 and GPE-14584) are merged if missing
+          const existingIds = new Set(migrated.map((o: Order) => o.id));
+          const missing = INITIAL_ORDERS.filter((o) => !existingIds.has(o.id));
+          return [...missing, ...migrated];
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return INITIAL_ORDERS;
+  });
+
+  // Save orders to localStorage
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('bx_orders', JSON.stringify(orders));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [orders]);
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('bx_cart');
@@ -359,6 +389,12 @@ export default function App() {
         }
         return ord;
       })
+    );
+  };
+
+  const handleUpdateOrder = (updatedOrder: Order) => {
+    setOrders((prev) =>
+      prev.map((ord) => (ord.id === updatedOrder.id ? updatedOrder : ord))
     );
   };
 
@@ -805,6 +841,7 @@ export default function App() {
         onClose={() => setIsAdminOpen(false)}
         orders={orders}
         onUpdateOrderStatus={handleUpdateOrderStatus}
+        onUpdateOrder={handleUpdateOrder}
         products={products}
         onAddNewProduct={handleAddNewProduct}
         onUpdateProduct={handleUpdateProduct}

@@ -17,6 +17,7 @@ import { Order } from '../../../types';
 
 interface ShopifyCustomersViewProps {
   orders: Order[];
+  onSelectOrder?: (order: Order) => void;
 }
 
 interface CustomerRecord {
@@ -31,7 +32,7 @@ interface CustomerRecord {
   tag: 'VIP' | 'Regular' | 'New' | 'Repeat';
 }
 
-export const ShopifyCustomersView: React.FC<ShopifyCustomersViewProps> = ({ orders }) => {
+export const ShopifyCustomersView: React.FC<ShopifyCustomersViewProps> = ({ orders, onSelectOrder }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -260,7 +261,21 @@ export const ShopifyCustomersView: React.FC<ShopifyCustomersViewProps> = ({ orde
                   </div>
                 </td>
                 <td className="p-3.5">
-                  <span className="font-bold text-gray-900">{cust.ordersCount} orders</span>
+                  {onSelectOrder && orders.find((o) => o.phone === cust.phone || o.customerName.toLowerCase() === cust.name.toLowerCase()) ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const ord = orders.find((o) => o.phone === cust.phone || o.customerName.toLowerCase() === cust.name.toLowerCase());
+                        if (ord) onSelectOrder(ord);
+                      }}
+                      className="font-bold text-blue-600 hover:text-blue-800 hover:underline block cursor-pointer text-left"
+                      title="Click to view order details"
+                    >
+                      {cust.ordersCount} orders
+                    </button>
+                  ) : (
+                    <span className="font-bold text-gray-900">{cust.ordersCount} orders</span>
+                  )}
                   <span className="block text-[10px] text-gray-400">Last: {cust.lastOrderDate}</span>
                 </td>
                 <td className="p-3.5 font-bold font-mono text-gray-900">

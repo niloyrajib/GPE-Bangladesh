@@ -1,0 +1,8 @@
+{
+  "name": "GPE Bangladesh - E-Commerce Store",
+  "description": "A modern Laravel-style Bangladeshi e-commerce platform featuring fast express delivery, cash on delivery, bKash \u0026 Nagad payments, flash deals, order tracking, and product catalog.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
